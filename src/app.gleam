@@ -1,5 +1,7 @@
 import gleam/int
+import gleam/string
 import lustre
+import lustre/attribute
 import lustre/element.{type Element}
 import lustre/element/html
 import lustre/event
@@ -11,32 +13,30 @@ pub fn main() {
 }
 
 type Model =
-  Int
+  String
 
 fn init(_) -> Model {
-  0
+  "Lucy"
 }
 
 type Msg {
-  UserClickedInc
-  UserClickedDec
+  UserUpdatedName(String)
 }
 
 fn update(model: Model, msg: Msg) -> Model {
   case msg {
-    UserClickedInc -> model + 1
-    UserClickedDec -> model - 1
+    UserUpdatedName(name) ->
+      case string.length(name) <= 10 {
+        True -> name
+        False -> model
+      }
   }
 }
 
 fn view(model: Model) -> Element(Msg) {
   html.div([], [
-    view_button(on_click: UserClickedInc, label: "+1111"),
-    html.text(int.to_string(model)),
-    view_button(on_click: UserClickedDec, label: "-111"),
+    html.span([], [html.text("input your name:")]),
+    html.input([attribute.value(model), event.on_input(UserUpdatedName)]),
+    html.p([], [html.text("Hello, " <> model)]),
   ])
-}
-
-fn view_button(on_click handle_click: msg, label text: String) -> Element(msg) {
-  html.button([event.on_click(handle_click)], [html.text(text)])
 }
