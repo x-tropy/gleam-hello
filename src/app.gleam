@@ -16,7 +16,7 @@ type Model =
   String
 
 fn init(_) -> Model {
-  "Lucy"
+  "Lucy1"
 }
 
 type Msg {
